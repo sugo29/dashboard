@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Kitchen Dashboard",
+			"type": "shell",
+			"command": "c:/Users/suhan/OneDrive/Documents/GitHub/DashBoard/.venv/Scripts/streamlit.exe",
+			"args": [
+				"run",
+				"kitchen_dashboard.py"
+			],
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}
