@@ -7,64 +7,244 @@ import numpy as np
 
 # Set page config
 st.set_page_config(
-    page_title="Variance-Level P&L Dashboard - Food Wastage Analysis",
-    page_icon="🗑️",
+    page_title="Variance-Level P&L Dashboard",
+    page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
+# Professional CSS styling - cleaner and more corporate
 st.markdown("""
 <style>
-    .main-header {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #1f77b4;
-        text-align: center;
+    /* Import professional fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+    
+    /* Global styling - clean, corporate look */
+    .stApp {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f7f9fc;
+    }
+    
+    /* Clean container styling */
+    .main .block-container {
+        padding: 1rem;
+        max-width: 1400px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Professional header styling */
+    .dashboard-header {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1a3353;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #e0e4e8;
+    }
+    
+    .dashboard-subtitle {
+        font-size: 1rem;
+        color: #5a6474;
         margin-bottom: 2rem;
     }
+    
+    /* Professional section headers */
+    .section-header {
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: #1a3353;
+        margin: 1.5rem 0 1rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #e0e4e8;
+    }
+    
+    /* Clean card styling */
+    .metric-card {
+        background: white;
+        padding: 1.2rem;
+        border-radius: 8px;
+        border: 1px solid #e0e4e8;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        margin: 0.5rem 0;
+        text-align: center;
+    }
+    
+    .metric-number {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1a3353;
+        margin-bottom: 0.3rem;
+    }
+    
+    .metric-label {
+        color: #5a6474;
+        font-size: 0.85rem;
+        font-weight: 400;
+    }
+    
+    /* Sub-header styling */
     .sub-header {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #ff7f0e;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #1a3353;
+        margin: 2rem 0 1rem 0;
+        padding: 1rem;
+        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+    }
+    
+    /* Insight card styling */
+    .insight-card {
+        background: white;
+        border: 1px solid #e0e4e8;
+        border-left: 4px solid #ef4444;
+        padding: 1rem;
+        border-radius: 8px;
         margin: 1rem 0;
     }
-    .metric-card {
-        background-color: #f0f2f6;
+    
+    .insight-card.success {
+        border-left-color: #10b981;
+    }
+    
+    .insight-title {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        color: #1e293b;
+    }
+    
+    .insight-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #3b82f6;
+    }
+    
+    /* Success and warning messages */
+    .success-message {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        color: #065f46;
         padding: 1rem;
-        border-radius: 0.5rem;
-        border-left: 5px solid #1f77b4;
+        border-radius: 8px;
+        margin: 1rem 0;
+        border-left: 4px solid #10b981;
+        font-weight: 500;
+    }
+    
+    .warning-message {
+        background: linear-gradient(135deg, #fef3c7, #fed7aa);
+        color: #92400e;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        border-left: 4px solid #f59e0b;
+        font-weight: 500;
+    }
+    
+    /* Clean table styling */
+    .dataframe {
+        border: 1px solid #e0e4e8;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .dataframe th {
+        background-color: #f1f4f8;
+        color: #1a3353;
+        font-weight: 500;
+        text-align: left;
+        padding: 12px;
+    }
+    
+    .dataframe td {
+        padding: 10px 12px;
+        border-top: 1px solid #e0e4e8;
+        color: #444;
+    }
+    
+    /* Clean tabs styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 2px;
+        background-color: #f1f4f8;
+        border-radius: 4px;
+        padding: 2px;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        height: 40px;
+        border-radius: 4px;
+        color: #5a6474;
+        font-weight: 400;
+        background: transparent;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background-color: white !important;
+        color: #1a3353 !important;
+        font-weight: 500;
+    }
+    
+    /* Clean sidebar styling */
+    .css-1d391kg, .css-163ttbj, .css-1r6slb0 {
+        background-color: white;
+        border-right: 1px solid #e0e4e8;
+    }
+    
+    /* Filter styling - similar to reference image */
+    .filter-container {
+        background-color: #fbfcfe;
+        border: 1px solid #e0e4e8;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .filter-header {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #1a3353;
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Checkbox styling similar to reference */
+    .stCheckbox {
+        padding: 0.2rem 0;
+    }
+    
+    .stCheckbox label p {
+        font-size: 0.9rem;
+        color: #444;
+    }
+    
+    /* Table container like reference */
+    .table-container {
+        border: 1px solid #e0e4e8;
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 1rem 0;
+    }
+    
+    .table-header {
+        background-color: #f1f4f8;
+        padding: 0.8rem 1rem;
+        font-weight: 500;
+        color: #1a3353;
+        border-bottom: 1px solid #e0e4e8;
     }
 </style>
 """, unsafe_allow_html=True)
 
 @st.cache_data
-def load_and_process_data():
-    """Load and process the dataset"""
+def load_data():
+    """Load the dataset"""
     try:
         # Load the Excel file
         df = pd.read_excel('dashborad_data.xlsx')
-        
-        # Display basic info about the dataset
-        st.sidebar.write("Dataset Info:")
-        st.sidebar.write(f"Rows: {len(df)}")
-        st.sidebar.write(f"Columns: {len(df.columns)}")
-        st.sidebar.write("Columns:", list(df.columns))
-        
-        # Show data types to help user select appropriate columns
-        st.sidebar.write("Column Data Types:")
-        for col in df.columns:
-            dtype = str(df[col].dtype)
-            # Check if column contains mostly numeric data
-            numeric_count = pd.to_numeric(df[col], errors='coerce').count()
-            total_count = len(df[col])
-            numeric_ratio = numeric_count / total_count if total_count > 0 else 0
-            
-            if numeric_ratio > 0.8:  # More than 80% numeric
-                st.sidebar.write(f"📊 {col}: {dtype} (Numeric-like)")
-            else:
-                st.sidebar.write(f"📝 {col}: {dtype}")
-        
         return df
     except Exception as e:
         st.error(f"Error loading data: {e}")
@@ -83,30 +263,34 @@ def get_numeric_columns(df):
             continue
     return numeric_cols
 
+def get_date_columns(df):
+    """Identify potential date columns"""
+    date_cols = []
+    for col in df.columns:
+        col_lower = col.lower()
+        if any(keyword in col_lower for keyword in ['date', 'month', 'time', 'period']):
+            date_cols.append(col)
+    return date_cols
+
 def create_revenue_cohorts(df, revenue_col):
     """Create revenue cohorts based on quartiles"""
     if revenue_col not in df.columns:
+        st.error(f"Column '{revenue_col}' not found in dataset")
         return df
     
     # Convert revenue column to numeric, handling non-numeric values
     try:
-        original_count = len(df)
         df_copy = df.copy()
         df_copy[revenue_col] = pd.to_numeric(df_copy[revenue_col], errors='coerce')
         # Remove rows with NaN values (non-convertible data)
         df_copy = df_copy.dropna(subset=[revenue_col])
         
         if len(df_copy) == 0:
-            st.error(f"❌ No valid numeric data found in column '{revenue_col}'.")
-            st.error(f"📋 Sample values from '{revenue_col}': {list(df[revenue_col].head(5))}")
-            st.error("💡 Please select a column that contains actual revenue numbers (like sales amounts, revenue figures, etc.)")
-            return df  # Return original df to avoid KeyError
-            
-        if len(df_copy) < original_count * 0.5:  # Lost more than 50% of data
-            st.warning(f"⚠️ Warning: Only {len(df_copy)} out of {original_count} rows contain valid numeric data in '{revenue_col}' column.")
+            st.error(f"No valid numeric data found in column '{revenue_col}'. Please select a column with numeric revenue data.")
+            st.write("Sample data from this column:", df[revenue_col].head())
+            return df
             
         df = df_copy
-            
     except Exception as e:
         st.error(f"Error converting '{revenue_col}' to numeric: {e}")
         return df
@@ -119,13 +303,13 @@ def create_revenue_cohorts(df, revenue_col):
     # Create cohorts
     def assign_cohort(revenue):
         if revenue <= q1:
-            return "Low Revenue (Q1)"
+            return "Low Revenue"
         elif revenue <= q2:
-            return "Medium-Low Revenue (Q2)"
+            return "Medium-Low Revenue"
         elif revenue <= q3:
-            return "Medium-High Revenue (Q3)"
+            return "Medium-High Revenue"
         else:
-            return "High Revenue (Q4)"
+            return "High Revenue"
     
     df['Revenue_Cohort'] = df[revenue_col].apply(assign_cohort)
     return df
@@ -133,22 +317,27 @@ def create_revenue_cohorts(df, revenue_col):
 def create_variance_buckets(df, variance_col):
     """Create variance buckets"""
     if variance_col not in df.columns:
+        st.error(f"Column '{variance_col}' not found in dataset")
         return df
     
     # Convert variance column to numeric, handling non-numeric values
     try:
-        df[variance_col] = pd.to_numeric(df[variance_col], errors='coerce')
+        df_copy = df.copy()
+        df_copy[variance_col] = pd.to_numeric(df_copy[variance_col], errors='coerce')
         # Remove rows with NaN values (non-convertible data)
-        df = df.dropna(subset=[variance_col])
+        df_copy = df_copy.dropna(subset=[variance_col])
         
-        if len(df) == 0:
+        if len(df_copy) == 0:
             st.error(f"No valid numeric data found in column '{variance_col}'. Please select a column with numeric variance data.")
+            st.write("Sample data from this column:", df[variance_col].head())
             return df
             
+        df = df_copy
     except Exception as e:
         st.error(f"Error converting '{variance_col}' to numeric: {e}")
         return df
     
+    # Create variance buckets
     def assign_variance_bucket(variance):
         abs_variance = abs(variance)
         if abs_variance <= 5:
@@ -163,9 +352,8 @@ def create_variance_buckets(df, variance_col):
 
 def sub_dashboard_1(df, revenue_col, variance_col):
     """Sub-dashboard 1: Avg Variance % by Revenue Category"""
-    st.markdown('<div class="sub-header">📊 Sub-Dashboard 1: Average Variance % by Revenue Category</div>', unsafe_allow_html=True)
-    st.markdown("**Purpose:** Analyze food material wastage by revenue cohorts")
-    st.markdown("**Key Question:** Do low-revenue stores waste more food?")
+    st.markdown('<div class="sub-header">📊 Sub-Dashboard 1: Average Variance % by Revenue Cohort</div>', unsafe_allow_html=True)
+    st.markdown("**Objective:** Analyze whether low-revenue or high-revenue kitchens are wasting more food.")
     
     if revenue_col not in df.columns or variance_col not in df.columns:
         st.error("Required columns not found in dataset")
@@ -177,8 +365,10 @@ def sub_dashboard_1(df, revenue_col, variance_col):
     # Check if Revenue_Cohort column was created successfully
     if 'Revenue_Cohort' not in df_processed.columns:
         st.error("❌ Could not create revenue cohorts. Please select a column with valid numeric revenue data.")
-        st.info("💡 Look for columns marked with 📊 in the sidebar - these contain numeric-like data suitable for analysis.")
         return
+    
+    # Convert variance column to numeric
+    df_processed[variance_col] = pd.to_numeric(df_processed[variance_col], errors='coerce')
     
     # Calculate average variance by cohort
     avg_variance_by_cohort = df_processed.groupby('Revenue_Cohort')[variance_col].agg([
@@ -187,70 +377,117 @@ def sub_dashboard_1(df, revenue_col, variance_col):
     avg_variance_by_cohort.columns = ['Avg_Variance_%', 'Store_Count', 'Std_Dev']
     avg_variance_by_cohort = avg_variance_by_cohort.reset_index()
     
-    # Sort by revenue level for better visualization
-    cohort_order = ["Low Revenue (Q1)", "Medium-Low Revenue (Q2)", "Medium-High Revenue (Q3)", "High Revenue (Q4)"]
-    avg_variance_by_cohort['Revenue_Cohort'] = pd.Categorical(avg_variance_by_cohort['Revenue_Cohort'], categories=cohort_order, ordered=True)
+    # Custom order for revenue cohorts
+    cohort_order = ["Low Revenue", "Medium-Low Revenue", "Medium-High Revenue", "High Revenue"]
+    avg_variance_by_cohort['Revenue_Cohort'] = pd.Categorical(
+        avg_variance_by_cohort['Revenue_Cohort'], 
+        categories=cohort_order, 
+        ordered=True
+    )
     avg_variance_by_cohort = avg_variance_by_cohort.sort_values('Revenue_Cohort')
     
-    # Create columns for visualization
-    col1, col2 = st.columns([3, 2])
+    # Create enhanced visualization
+    col1, col2 = st.columns([8, 4])
     
     with col1:
-        # Bar chart showing average variance by revenue category
-        fig1 = px.bar(
+        # Modern bar chart with better styling
+        fig = px.bar(
             avg_variance_by_cohort,
             x='Revenue_Cohort',
             y='Avg_Variance_%',
-            title='Average Food Wastage (Variance %) by Revenue Category',
+            title='Average Food Wastage by Revenue Cohort',
+            labels={'Avg_Variance_%': 'Average Variance %', 'Revenue_Cohort': 'Revenue Cohort'},
             color='Avg_Variance_%',
-            color_continuous_scale='Reds',
-            text='Avg_Variance_%',
-            labels={
-                'Revenue_Cohort': 'Revenue Category',
-                'Avg_Variance_%': 'Average Wastage %'
-            }
+            color_continuous_scale=['#10b981', '#f59e0b', '#ef4444'],
+            text='Avg_Variance_%'
         )
-        fig1.update_traces(texttemplate='%{text:.1f}%', textposition='outside')
-        fig1.update_layout(
-            height=500, 
+        
+        # Enhanced styling
+        fig.update_traces(
+            texttemplate='%{text:.1f}%', 
+            textposition='outside',
+            textfont_size=14,
+            textfont_color='#1e293b'
+        )
+        
+        fig.update_layout(
             showlegend=False,
-            xaxis_title="Revenue Category",
-            yaxis_title="Average Wastage %"
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            xaxis_title="Revenue Cohort",
+            yaxis_title="Average Variance %",
+            title_font_size=20,
+            title_font_color='#1e293b',
+            xaxis=dict(
+                tickfont_size=12,
+                title_font_size=14,
+                gridcolor='rgba(0,0,0,0.1)'
+            ),
+            yaxis=dict(
+                tickfont_size=12,
+                title_font_size=14,
+                gridcolor='rgba(0,0,0,0.1)'
+            ),
+            height=500,
+            margin=dict(t=60, b=60, l=60, r=60)
         )
-        st.plotly_chart(fig1, use_container_width=True)
+        
+        st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        # Summary table
-        st.markdown("### 📊 Summary Table")
-        summary_table = avg_variance_by_cohort[['Revenue_Cohort', 'Avg_Variance_%', 'Store_Count']].copy()
-        summary_table.columns = ['Revenue Category', 'Avg Wastage %', 'Store Count']
-        st.dataframe(summary_table, hide_index=True, use_container_width=True)
+        # Enhanced summary section
+        st.markdown("#### 📊 Key Metrics")
         
-        # Key insights
-        st.markdown("### 💡 Key Insights")
-        highest_waste = avg_variance_by_cohort.loc[avg_variance_by_cohort['Avg_Variance_%'].idxmax()]
-        lowest_waste = avg_variance_by_cohort.loc[avg_variance_by_cohort['Avg_Variance_%'].idxmin()]
+        total_avg = df_processed[variance_col].mean()
+        total_stores = len(df_processed)
         
+        # Modern metric cards
         st.markdown(f"""
         <div class="metric-card">
-            <strong>🔴 Highest Wastage:</strong><br>
-            {highest_waste['Revenue_Cohort']}<br>
-            <span style="color: red; font-size: 1.1em;">{highest_waste['Avg_Variance_%']:.1f}% wastage</span>
+            <div class="metric-number">{total_avg:.1f}%</div>
+            <div class="metric-label">Overall Average</div>
         </div>
         """, unsafe_allow_html=True)
         
         st.markdown(f"""
         <div class="metric-card">
-            <strong>🟢 Lowest Wastage:</strong><br>
-            {lowest_waste['Revenue_Cohort']}<br>
-            <span style="color: green; font-size: 1.1em;">{lowest_waste['Avg_Variance_%']:.1f}% wastage</span>
+            <div class="metric-number">{total_stores:,}</div>
+            <div class="metric-label">Total Stores</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Enhanced data table
+        st.markdown("#### 📋 Detailed Results")
+        display_df = avg_variance_by_cohort[['Revenue_Cohort', 'Avg_Variance_%', 'Store_Count']].copy()
+        display_df['Avg_Variance_%'] = display_df['Avg_Variance_%'].round(1)
+        display_df.columns = ['Cohort', 'Avg %', 'Stores']
+        st.dataframe(display_df, use_container_width=True, hide_index=True)
+        
+        # Enhanced insights
+        st.markdown("#### 💡 Key Insights")
+        max_cohort = avg_variance_by_cohort.loc[avg_variance_by_cohort['Avg_Variance_%'].idxmax()]
+        min_cohort = avg_variance_by_cohort.loc[avg_variance_by_cohort['Avg_Variance_%'].idxmin()]
+        
+        st.markdown(f"""
+        <div class="insight-card">
+            <div class="insight-title">🔴 Highest Wastage</div>
+            <div class="insight-value">{max_cohort['Revenue_Cohort']}</div>
+            <div style="color: #64748b; margin-top: 0.5rem;">{max_cohort['Avg_Variance_%']:.1f}% average wastage</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div class="insight-card success">
+            <div class="insight-title">🟢 Lowest Wastage</div>
+            <div class="insight-value">{min_cohort['Revenue_Cohort']}</div>
+            <div style="color: #64748b; margin-top: 0.5rem;">{min_cohort['Avg_Variance_%']:.1f}% average wastage</div>
         </div>
         """, unsafe_allow_html=True)
 
 def sub_dashboard_2(df, revenue_col, variance_col, date_col=None):
-    """Sub-dashboard 2: Store Count by Variance Buckets"""
-    st.markdown('<div class="sub-header">🔹 Sub-Dashboard 2: Store Count by Variance Buckets</div>', unsafe_allow_html=True)
-    st.markdown("**Purpose:** Show distribution of stores across variance levels by revenue and time")
+    """Sub-dashboard 2: Store Count by Variance Bucket"""
+    st.markdown('<div class="sub-header">📊 Sub-Dashboard 2: Store Count by Variance Buckets</div>', unsafe_allow_html=True)
+    st.markdown("**Objective:** Analyze how food wastage is distributed across revenue levels and time periods.")
     
     if revenue_col not in df.columns or variance_col not in df.columns:
         st.error("Required columns not found in dataset")
@@ -262,315 +499,382 @@ def sub_dashboard_2(df, revenue_col, variance_col, date_col=None):
     # Check if Revenue_Cohort column was created successfully
     if 'Revenue_Cohort' not in df_processed.columns:
         st.error("❌ Could not create revenue cohorts. Please select a column with valid numeric revenue data.")
-        st.info("💡 Look for columns marked with 📊 in the sidebar - these contain numeric-like data suitable for analysis.")
         return
-        
+    
     df_processed = create_variance_buckets(df_processed, variance_col)
     
-    # Add month column if date is available
-    if date_col and date_col in df.columns:
+    # Check if Variance_Bucket column was created successfully
+    if 'Variance_Bucket' not in df_processed.columns:
+        st.error("❌ Could not create variance buckets. Please select a column with valid numeric variance data.")
+        return
+    
+    # Process date column if available
+    has_date = False
+    if date_col and date_col in df_processed.columns:
         try:
-            df_processed[date_col] = pd.to_datetime(df_processed[date_col])
+            # Try to convert to datetime
+            df_processed[date_col] = pd.to_datetime(df_processed[date_col], errors='coerce')
+            # Extract month
             df_processed['Month'] = df_processed[date_col].dt.strftime('%Y-%m')
+            has_date = True
         except:
-            st.warning("Could not parse date column. Proceeding without time analysis.")
-            date_col = None
+            st.warning(f"Could not convert '{date_col}' to date format. Proceeding without month analysis.")
     
-    # Main pivot table: Rows = Months, Columns = Revenue buckets, Values = Count of stores
-    if date_col and 'Month' in df_processed.columns:
-        st.markdown("### 📋 Main Analysis Table: Store Count by Month and Revenue Category")
-        st.markdown("**Rows:** Months | **Columns:** Revenue Categories | **Values:** Store Count")
+    # Create tabs for different views
+    tab1, tab2, tab3 = st.tabs(["📋 Pivot Table", "📊 Visualization", "📈 Monthly Trends"])
+    
+    with tab1:
+        st.markdown("### Store Count by Variance Bucket and Revenue Cohort")
         
-        # Create the main pivot table
-        main_pivot = df_processed.pivot_table(
-            index='Month',
-            columns='Revenue_Cohort',
-            values=variance_col,  # We just need to count, so any column works
-            aggfunc='count',
-            fill_value=0
-        )
+        # Add a dummy column for counting
+        df_processed['Count'] = 1
         
-        # Reorder columns for better display
-        cohort_order = ["Low Revenue (Q1)", "Medium-Low Revenue (Q2)", "Medium-High Revenue (Q3)", "High Revenue (Q4)"]
-        main_pivot = main_pivot.reindex(columns=cohort_order, fill_value=0)
-        
-        # Display the table with styling
-        st.dataframe(
-            main_pivot.style.background_gradient(cmap='Blues'),
-            use_container_width=True
-        )
-        
-        # Additional analysis by variance buckets
-        st.markdown("### 📊 Variance Bucket Analysis by Month and Revenue")
-        
-        # Create tabs for different views
-        tab1, tab2, tab3 = st.tabs(["By Variance Buckets", "Monthly Trends", "Summary Stats"])
-        
-        with tab1:
-            st.markdown("**Table: Store count by Variance Buckets and Revenue Categories**")
-            variance_revenue_pivot = df_processed.pivot_table(
-                index='Revenue_Cohort',
-                columns='Variance_Bucket',
-                values=variance_col,
-                aggfunc='count',
+        # Create pivot table
+        if has_date:
+            pivot = pd.pivot_table(
+                df_processed,
+                values='Count',  # Use Count instead of Variance_Bucket
+                index=['Month'],
+                columns=['Variance_Bucket', 'Revenue_Cohort'],
+                aggfunc='sum',  # Changed to sum from count since we're using a dummy column
                 fill_value=0
             )
             
-            # Reorder variance buckets
-            bucket_order = ["Low (0-5%)", "Medium (5-15%)", "High (15%+)"]
-            variance_revenue_pivot = variance_revenue_pivot.reindex(columns=bucket_order, fill_value=0)
+            # Format pivot table for display
+            pivot = pivot.reset_index()
+            st.dataframe(pivot, use_container_width=True)
             
-            st.dataframe(
-                variance_revenue_pivot.style.background_gradient(cmap='Reds'),
-                use_container_width=True
+            # Allow download of pivot data
+            csv = pivot.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                "Download Pivot Data as CSV",
+                csv,
+                "variance_pivot.csv",
+                "text/csv",
+                key='download-pivot'
             )
-        
-        with tab2:
-            st.markdown("**Monthly Trend: Store Count by Variance Bucket**")
-            monthly_variance_pivot = df_processed.pivot_table(
-                index='Month',
-                columns='Variance_Bucket',
-                values=variance_col,
-                aggfunc='count',
+        else:
+            # Create pivot without month
+            pivot = pd.pivot_table(
+                df_processed,
+                values='Count',  # Use Count instead of Variance_Bucket
+                index=['Revenue_Cohort'],
+                columns=['Variance_Bucket'],
+                aggfunc='sum',  # Changed to sum from count
                 fill_value=0
             )
-            monthly_variance_pivot = monthly_variance_pivot.reindex(columns=bucket_order, fill_value=0)
             
-            # Line chart for trends
-            fig_trend = px.line(
-                monthly_variance_pivot.reset_index(),
+            # Format pivot table for display
+            pivot = pivot.reset_index()
+            st.dataframe(pivot, use_container_width=True)
+    
+    with tab2:
+        st.markdown("### Visualization of Store Count by Variance Bucket")
+        
+        # Count by variance bucket and revenue cohort
+        counts = df_processed.groupby(['Variance_Bucket', 'Revenue_Cohort']).size().reset_index(name='Count')
+        
+        # Order for variance buckets and revenue cohorts
+        variance_order = ["Low (0-5%)", "Medium (5-15%)", "High (15%+)"]
+        revenue_order = ["Low Revenue", "Medium-Low Revenue", "Medium-High Revenue", "High Revenue"]
+        
+        # Set categorical order
+        counts['Variance_Bucket'] = pd.Categorical(counts['Variance_Bucket'], categories=variance_order, ordered=True)
+        counts['Revenue_Cohort'] = pd.Categorical(counts['Revenue_Cohort'], categories=revenue_order, ordered=True)
+        
+        # Sort by the ordered categories
+        counts = counts.sort_values(['Variance_Bucket', 'Revenue_Cohort'])
+        
+        # Create enhanced stacked bar chart
+        fig = px.bar(
+            counts,
+            x='Variance_Bucket',
+            y='Count',
+            color='Revenue_Cohort',
+            title='Store Distribution by Variance Bucket and Revenue Cohort',
+            labels={'Count': 'Number of Stores', 'Variance_Bucket': 'Variance Bucket'},
+            category_orders={"Variance_Bucket": variance_order, "Revenue_Cohort": revenue_order},
+            color_discrete_sequence=['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
+        )
+        
+        fig.update_layout(
+            xaxis_title="Variance Bucket",
+            yaxis_title="Number of Stores",
+            legend_title="Revenue Cohort",
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            title_font_size=18,
+            title_font_color='#1e293b',
+            xaxis=dict(
+                tickfont_size=12,
+                title_font_size=14,
+                gridcolor='rgba(0,0,0,0.1)'
+            ),
+            yaxis=dict(
+                tickfont_size=12,
+                title_font_size=14,
+                gridcolor='rgba(0,0,0,0.1)'
+            ),
+            legend=dict(
+                bgcolor='rgba(255,255,255,0.8)',
+                bordercolor='rgba(0,0,0,0.1)',
+                borderwidth=1
+            ),
+            height=500,
+            margin=dict(t=60, b=60, l=60, r=60)
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with tab3:
+        if has_date:
+            st.markdown("### Monthly Trends in Variance Distribution")
+            
+            # Group by month and variance bucket
+            monthly_counts = df_processed.groupby(['Month', 'Variance_Bucket']).size().reset_index(name='Count')
+            
+            # Order months chronologically
+            monthly_counts['Month'] = pd.Categorical(monthly_counts['Month'], ordered=True)
+            monthly_counts = monthly_counts.sort_values('Month')
+            
+            # Set categorical order for variance buckets
+            monthly_counts['Variance_Bucket'] = pd.Categorical(
+                monthly_counts['Variance_Bucket'], 
+                categories=variance_order, 
+                ordered=True
+            )
+            
+            # Create enhanced line chart
+            fig = px.line(
+                monthly_counts,
                 x='Month',
-                y=bucket_order,
-                title='Monthly Trend: Store Count by Variance Bucket',
-                labels={'value': 'Store Count', 'Month': 'Month'},
-                color_discrete_map={
-                    'Low (0-5%)': '#2ecc71',
-                    'Medium (5-15%)': '#f39c12', 
-                    'High (15%+)': '#e74c3c'
-                }
-            )
-            fig_trend.update_layout(height=400)
-            st.plotly_chart(fig_trend, use_container_width=True)
-            
-            st.dataframe(
-                monthly_variance_pivot.style.background_gradient(cmap='Oranges'),
-                use_container_width=True
-            )
-        
-        with tab3:
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                st.markdown("**Total Store Distribution by Variance Bucket**")
-                total_by_bucket = df_processed['Variance_Bucket'].value_counts()
-                for bucket in bucket_order:
-                    if bucket in total_by_bucket.index:
-                        count = total_by_bucket[bucket]
-                        pct = (count / len(df_processed)) * 100
-                        color = {'Low (0-5%)': 'green', 'Medium (5-15%)': 'orange', 'High (15%+)': 'red'}[bucket]
-                        st.markdown(f"""
-                        <div class="metric-card">
-                            <strong>{bucket}</strong><br>
-                            <span style="color: {color}; font-size: 1.1em;">{count} stores ({pct:.1f}%)</span>
-                        </div>
-                        """, unsafe_allow_html=True)
-            
-            with col2:
-                st.markdown("**Store Distribution by Revenue Category**")
-                total_by_revenue = df_processed['Revenue_Cohort'].value_counts()
-                for cohort in cohort_order:
-                    if cohort in total_by_revenue.index:
-                        count = total_by_revenue[cohort]
-                        pct = (count / len(df_processed)) * 100
-                        st.markdown(f"""
-                        <div class="metric-card">
-                            <strong>{cohort.replace(' (Q', ' Q').replace(')', '')}</strong><br>
-                            <span style="color: #1f77b4; font-size: 1.1em;">{count} stores ({pct:.1f}%)</span>
-                        </div>
-                        """, unsafe_allow_html=True)
-    
-    else:
-        # If no date column, show simplified analysis
-        st.markdown("### 📊 Store Count Analysis (No Time Data Available)")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("**Store Count by Variance Buckets and Revenue Categories**")
-            variance_revenue_pivot = df_processed.pivot_table(
-                index='Revenue_Cohort',
-                columns='Variance_Bucket',
-                values=variance_col,
-                aggfunc='count',
-                fill_value=0
+                y='Count',
+                color='Variance_Bucket',
+                title='Monthly Trends in Variance Distribution',
+                labels={'Count': 'Number of Stores', 'Month': 'Month'},
+                markers=True,
+                category_orders={"Variance_Bucket": variance_order},
+                color_discrete_sequence=['#10b981', '#f59e0b', '#ef4444'],
             )
             
-            bucket_order = ["Low (0-5%)", "Medium (5-15%)", "High (15%+)"]
-            variance_revenue_pivot = variance_revenue_pivot.reindex(columns=bucket_order, fill_value=0)
+            fig.update_layout(
+                xaxis_title="Month",
+                yaxis_title="Number of Stores",
+                legend_title="Variance Bucket",
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                title_font_size=18,
+                title_font_color='#1e293b',
+                xaxis=dict(
+                    tickfont_size=12,
+                    title_font_size=14,
+                    gridcolor='rgba(0,0,0,0.1)',
+                    tickangle=45
+                ),
+                yaxis=dict(
+                    tickfont_size=12,
+                    title_font_size=14,
+                    gridcolor='rgba(0,0,0,0.1)'
+                ),
+                legend=dict(
+                    bgcolor='rgba(255,255,255,0.8)',
+                    bordercolor='rgba(0,0,0,0.1)',
+                    borderwidth=1
+                ),
+                height=500,
+                margin=dict(t=60, b=80, l=60, r=60)
+            )
             
-            st.dataframe(
-                variance_revenue_pivot.style.background_gradient(cmap='Reds'),
-                use_container_width=True
+            fig.update_traces(
+                line_width=3,
+                marker_size=8
             )
-        
-        with col2:
-            # Pie chart for overall distribution
-            fig_pie = px.pie(
-                values=df_processed['Variance_Bucket'].value_counts().values,
-                names=df_processed['Variance_Bucket'].value_counts().index,
-                title='Overall Store Distribution by Variance Bucket',
-                color_discrete_map={
-                    'Low (0-5%)': '#2ecc71',
-                    'Medium (5-15%)': '#f39c12', 
-                    'High (15%+)': '#e74c3c'
-                }
-            )
-            fig_pie.update_layout(height=400)
-            st.plotly_chart(fig_pie, use_container_width=True)
+            
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("Date column not selected or could not be processed. Monthly trends are not available.")
 
 def main():
     """Main function to run the dashboard"""
-    st.markdown('<div class="main-header">🗑️ Variance-Level P&L Dashboard - Food Wastage Analysis</div>', unsafe_allow_html=True)
+    # Professional header
+    st.markdown('<div class="dashboard-header">📊 Variance-Level P&L Dashboard</div>', unsafe_allow_html=True)
+    st.markdown('<div class="dashboard-subtitle">Food Material Wastage Analysis for Cloud Kitchen Operations</div>', unsafe_allow_html=True)
     
-    st.markdown("""
-    ### 🎯 Purpose: Analyze Food Material Wastage and Performance Impact
-    **Note:** "Variance" = Food Material Wastage = Loss
+    # Simple overview cards
+    col1, col2, col3, col4 = st.columns(4)
     
-    This dashboard helps answer key questions:
-    - 📊 Do low-revenue stores waste more food?
-    - 📈 How are stores distributed across wastage levels?
-    - 📅 Are there seasonal patterns in food wastage?
-    """)
+    with col1:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-number">📈</div>
+            <div class="metric-label">Revenue Analysis</div>
+        </div>
+        """, unsafe_allow_html=True)
     
-    # Load data
-    df = load_and_process_data()
+    with col2:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-number">🗑️</div>
+            <div class="metric-label">Wastage Tracking</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-number">📊</div>
+            <div class="metric-label">Performance Metrics</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col4:
+        st.markdown("""
+        <div class="metric-card">
+            <div class="metric-number">📅</div>
+            <div class="metric-label">Trend Analysis</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Load data with enhanced error handling
+    df = load_data()
     
     if df is None:
-        st.error("Could not load the dataset. Please check if 'dashborad_data.xlsx' exists in the current directory.")
+        st.markdown("""
+        <div class="warning-message">
+            ⚠️ Failed to load data. Please check if 'dashborad_data.xlsx' exists in the current directory.
+        </div>
+        """, unsafe_allow_html=True)
         st.info("""
-        **Expected data structure:**
+        **📋 Expected Data Structure:**
         - **Revenue Column**: Store revenue data for categorization
         - **Variance Column**: Food wastage percentage (variance %)
         - **Store ID**: Unique identifier for each store
         - **Date Column** (Optional): For time-based analysis
         """)
         return
+    else:
+        st.markdown("""
+        <div class="success-message">
+            ✅ Data loaded successfully! Ready for analysis.
+        </div>
+        """, unsafe_allow_html=True)
     
-    # Sidebar for column selection
-    st.sidebar.markdown("## 🔧 Column Mapping")
-    st.sidebar.markdown("Map your dataset columns to the required fields:")
+    # Enhanced sidebar with better styling
+    st.sidebar.markdown("""
+    <div style="text-align: center; padding: 1rem 0; margin-bottom: 2rem;">
+        <h2 style="color: #1e293b; margin: 0; font-weight: 700;">🔧 Configuration</h2>
+        <p style="color: #64748b; margin: 0.5rem 0 0 0; font-size: 0.9rem;">Configure your analysis parameters</p>
+    </div>
+    """, unsafe_allow_html=True)
     
-    # Column selection
-    available_columns = list(df.columns)
-    numeric_columns = get_numeric_columns(df)
+    # Dataset info with enhanced styling
+    if df is not None:
+        st.sidebar.markdown("### 📊 Dataset Overview")
+        
+        # Create two columns for metrics
+        col_a, col_b = st.sidebar.columns(2)
+        
+        with col_a:
+            st.sidebar.markdown(f"""
+            <div class="metric-card" style="margin: 0.5rem 0;">
+                <div class="metric-number" style="font-size: 1.8rem;">{len(df):,}</div>
+                <div class="metric-label" style="font-size: 0.8rem;">Records</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col_b:
+            st.sidebar.markdown(f"""
+            <div class="metric-card" style="margin: 0.5rem 0;">
+                <div class="metric-number" style="font-size: 1.8rem;">{len(df.columns)}</div>
+                <div class="metric-label" style="font-size: 0.8rem;">Columns</div>
+            </div>
+            """, unsafe_allow_html=True)
     
-    st.sidebar.markdown("**💡 Tip:** Look for columns marked with 📊 (numeric-like data)")
+    st.sidebar.markdown("### 🎯 Column Selection")
+    st.sidebar.markdown("*Choose the appropriate columns for analysis*")
     
+    # Get numeric columns
+    numeric_cols = get_numeric_columns(df)
+    date_cols = get_date_columns(df)
+    
+    # Simple column selection
     revenue_col = st.sidebar.selectbox(
-        "📈 Select Revenue Column:",
-        options=available_columns,
-        help="Column containing revenue data for creating revenue categories. Should contain numeric values."
+        "💰 Revenue Column",
+        options=numeric_cols,
+        help="Column containing store revenue data"
     )
-    
-    # Show warning if selected column is not numeric-like
-    if revenue_col not in numeric_columns:
-        st.sidebar.warning(f"⚠️ '{revenue_col}' may not contain numeric data. Consider selecting a different column.")
     
     variance_col = st.sidebar.selectbox(
-        "🗑️ Select Variance/Wastage % Column:",
-        options=available_columns,
-        help="Column containing food wastage percentage data. Should contain numeric values."
+        "📊 Variance (%) Column",
+        options=numeric_cols,
+        help="Column containing food wastage percentage"
     )
     
-    # Show warning if selected column is not numeric-like
-    if variance_col not in numeric_columns:
-        st.sidebar.warning(f"⚠️ '{variance_col}' may not contain numeric data. Consider selecting a different column.")
+    date_col = None
+    if date_cols:
+        date_col = st.sidebar.selectbox(
+            "📅 Date Column (Optional)",
+            options=["None"] + date_cols,
+            help="Column containing date information for trends"
+        )
+        if date_col == "None":
+            date_col = None
     
-    date_col = st.sidebar.selectbox(
-        "📅 Select Date Column (Optional):",
-        options=['None'] + available_columns,
-        help="Column containing date/month data for trend analysis"
-    )
-    date_col = None if date_col == 'None' else date_col
-    
-    # Data preview
-    st.sidebar.markdown("## 📋 Data Preview")
-    if st.sidebar.checkbox("Show Raw Data"):
-        st.markdown("### Raw Dataset Preview")
-        st.dataframe(df.head(10), use_container_width=True)
-    
-    # Filter options
-    st.sidebar.markdown("## 🔍 Filters")
-    
-    # Date filter if date column is available
-    if date_col and date_col in df.columns:
-        try:
-            df[date_col] = pd.to_datetime(df[date_col])
-            date_range = st.sidebar.date_input(
-                "Select Date Range:",
-                value=(df[date_col].min().date(), df[date_col].max().date()),
-                min_value=df[date_col].min().date(),
-                max_value=df[date_col].max().date()
-            )
-            if len(date_range) == 2:
-                df = df[(df[date_col].dt.date >= date_range[0]) & (df[date_col].dt.date <= date_range[1])]
-        except:
-            st.sidebar.warning("Could not parse date column")
-    
-    # Show dashboards
+    # Simple validation
     if revenue_col and variance_col:
-        # Sub-dashboard 1
-        sub_dashboard_1(df, revenue_col, variance_col)
-        
-        st.markdown("---")
-        
-        # Sub-dashboard 2
-        sub_dashboard_2(df, revenue_col, variance_col, date_col)
-        
-        # Business insights
-        st.markdown("---")
-        st.markdown("## 💡 Actionable Business Insights")
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("""
-            ### 🔍 Key Questions Answered:
-            
-            1. **📊 Revenue vs Wastage Correlation**
-               - Do low-revenue stores waste more food?
-               - Which revenue category has highest/lowest wastage?
-            
-            2. **📈 Wastage Distribution Analysis**
-               - How many stores fall into each wastage bucket?
-               - What's the overall wastage profile?
-            
-            3. **📅 Temporal Patterns**
-               - Are there seasonal wastage trends?
-               - Which months show higher food wastage?
-            """)
-        
-        with col2:
-            st.markdown("""
-            ### 🎯 Recommended Actions:
-            
-            - **🔴 High Wastage Stores**: Immediate intervention needed
-              - Implement portion control
-              - Review inventory management
-              - Staff training on food handling
-            
-            - **🟢 Low Wastage Stores**: Learn best practices
-              - Document successful processes
-              - Share learnings across network
-              - Use as benchmark stores
-            
-            - **📈 Performance Monitoring**
-              - Weekly wastage tracking
-              - Monthly trend analysis
-              - Revenue impact assessment
-            """)
+        st.sidebar.success("✅ Configuration complete")
     else:
-        st.warning("⚠️ Please select the required columns from the sidebar to generate the dashboard.")
+        st.sidebar.warning("⚠️ Please select required columns")
+    
+    # Main analysis content
+    if revenue_col and variance_col and not df[revenue_col].isna().all() and not df[variance_col].isna().all():
+        
+        # Create tabs for sub-dashboards
+        tab1, tab2 = st.tabs(["Avg Variance by Revenue Cohort", "Store Count by Variance Bucket"])
+        
+        with tab1:
+            sub_dashboard_1(df, revenue_col, variance_col)
+        
+        with tab2:
+            sub_dashboard_2(df, revenue_col, variance_col, date_col)
+        
+        # Enhanced footer with professional styling
+        st.markdown("---")
+        st.markdown("""
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-radius: 16px; border: 1px solid #e2e8f0;">
+            <h4 style="color: #1e293b; margin-bottom: 1rem;">📊 Analysis Summary</h4>
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem;">
+                <div style="text-align: center;">
+                    <strong style="color: #667eea;">Variance Definition</strong><br>
+                    <span style="color: #64748b; font-size: 0.9rem;">Food material wastage percentage</span>
+                </div>
+                <div style="text-align: center;">
+                    <strong style="color: #667eea;">Revenue Cohorts</strong><br>
+                    <span style="color: #64748b; font-size: 0.9rem;">Quartile-based categorization</span>
+                </div>
+                <div style="text-align: center;">
+                    <strong style="color: #667eea;">Variance Buckets</strong><br>
+                    <span style="color: #64748b; font-size: 0.9rem;">Low (0-5%), Medium (5-15%), High (15%+)</span>
+                </div>
+            </div>
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #cbd5e1; color: #64748b; font-style: italic;">
+                Built for optimizing cloud kitchen operations and reducing food wastage
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    else:
+        # Enhanced error state with actionable guidance
+        st.markdown("""
+        <div style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #fef3c7, #fed7aa); border-radius: 16px; margin: 2rem 0;">
+            <h3 style="color: #92400e; margin-bottom: 1rem;">⚠️ Configuration Required</h3>
+            <p style="color: #92400e; margin-bottom: 1.5rem;">Please select valid revenue and variance columns to begin your analysis.</p>
+            <div style="background: rgba(255, 255, 255, 0.7); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                <strong style="color: #92400e;">Quick Guide:</strong><br>
+                <span style="color: #92400e; font-size: 0.9rem;">1. Select a numeric revenue column<br>2. Select a variance percentage column<br>3. Optionally add a date column for trends</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
