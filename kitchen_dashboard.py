@@ -8,7 +8,7 @@ import numpy as np
 # Set page configuration
 st.set_page_config(
     page_title="Kitchen-Level P&L Dashboard",
-    page_icon="🏪",
+    page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -17,11 +17,11 @@ st.set_page_config(
 st.markdown("""
 <style>
     .main-header {
-        font-size: 2.5rem;
+        font-size: 1.8rem;
         font-weight: bold;
         color: #1f77b4;
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
     }
     .metric-card {
         background-color: #f0f2f6;
@@ -29,8 +29,47 @@ st.markdown("""
         border-radius: 0.5rem;
         border-left: 5px solid #1f77b4;
     }
-    .sidebar .sidebar-content {
-        background-color: #fafafa;
+    /* Compact sidebar styling */
+    .css-1d391kg {
+        padding-top: 0.5rem;
+    }
+    .css-1cypcdb {
+        padding: 0.1rem 1rem;
+    }
+    .stSelectbox label {
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        margin-bottom: 0rem !important;
+        line-height: 1.1 !important;
+    }
+    .stSlider label {
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        margin-bottom: 0rem !important;
+        line-height: 1.1 !important;
+    }
+    .stSelectbox > div {
+        margin-bottom: 0rem !important;
+    }
+    .stSlider > div {
+        margin-bottom: 0rem !important;
+    }
+    .stSelectbox > div > div {
+        min-height: 32px !important;
+        height: 32px !important;
+    }
+    /* Reduce sidebar width and optimize space */
+    .css-1d391kg {
+        width: 260px !important;
+    }
+    section[data-testid="stSidebar"] > div {
+        width: 260px !important;
+    }
+    /* Compact sidebar header */
+    .css-1cypcdb h3 {
+        margin-top: 0 !important;
+        margin-bottom: 0.2rem !important;
+        font-size: 1.1rem !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -69,43 +108,44 @@ def load_data():
     return df
 
 def create_filters(df):
-    """Create sidebar filters."""
-    st.sidebar.markdown("## 📊 Dashboard Filters")
+    """Create compact sidebar filters."""
+    st.sidebar.markdown("### 📊 Filters")
     
     # Store filter
     stores = ['All'] + sorted(df['STORE'].unique().tolist())
-    selected_store = st.sidebar.selectbox("Select Store", stores)
+    selected_store = st.sidebar.selectbox("🏪 Store", stores, key="store")
     
     # Month filter - sorted chronologically
     months_with_dates = df[['MONTH', 'MONTH_DATE']].drop_duplicates().sort_values('MONTH_DATE')
     months = ['All'] + months_with_dates['MONTH'].tolist()
-    selected_month = st.sidebar.selectbox("Select Month", months)
+    selected_month = st.sidebar.selectbox("📅 Month", months, key="month")
     
     # Zone filter
     zones = ['All'] + sorted(df['ZONE MAPPING'].unique().tolist())
-    selected_zone = st.sidebar.selectbox("Select Zone", zones)
+    selected_zone = st.sidebar.selectbox("🗺️ Zone", zones, key="zone")
     
     # Revenue Cohort filter
     revenue_cohorts = ['All'] + sorted(df['REVENUE COHORT'].unique().tolist())
-    selected_revenue_cohort = st.sidebar.selectbox("Select Revenue Cohort", revenue_cohorts)
+    selected_revenue_cohort = st.sidebar.selectbox("💰 Revenue", revenue_cohorts, key="rev_cohort")
     
     # CM Cohort filter
     cm_cohorts = ['All'] + sorted(df['CM COHORT'].unique().tolist())
-    selected_cm_cohort = st.sidebar.selectbox("Select CM Cohort", cm_cohorts)
+    selected_cm_cohort = st.sidebar.selectbox("📊 CM Cohort", cm_cohorts, key="cm_cohort")
     
     # EBITDA Category filter
     ebitda_categories = ['All'] + sorted(df['EBITDA CATEGORY'].unique().tolist())
-    selected_ebitda_category = st.sidebar.selectbox("Select EBITDA Category", ebitda_categories)
+    selected_ebitda_category = st.sidebar.selectbox("📈 EBITDA Cat", ebitda_categories, key="ebitda_cat")
     
     # EBITDA Range slider
     min_ebitda = float(df['EBITDA_PERCENT'].min())
     max_ebitda = float(df['EBITDA_PERCENT'].max())
     ebitda_range = st.sidebar.slider(
-        "Select EBITDA % Range",
+        "📉 EBITDA %",
         min_value=min_ebitda,
         max_value=max_ebitda,
         value=(min_ebitda, max_ebitda),
-        step=0.1
+        step=0.1,
+        key="ebitda_range"
     )
     
     return {
@@ -189,9 +229,15 @@ def create_kitchen_snapshot_table(df):
     )])
     
     fig.update_layout(
-        title="📋 Kitchen Snapshot Table",
-        height=400,
+        title="Kitchen Snapshot Table",
+        height=500,
         margin=dict(l=0, r=0, t=40, b=0)
+    )
+    
+    # Add scrollbar for better navigation through records
+    fig.update_layout(
+        xaxis=dict(fixedrange=True),
+        yaxis=dict(fixedrange=False)
     )
     
     return fig
@@ -204,7 +250,7 @@ def create_top_kitchens_ebitda(df):
         top_kitchens,
         x='STORE',
         y='KITCHEN EBITDA',
-        title='🏆 Top 3 Kitchens by EBITDA',
+        title='Top 3 Kitchens by EBITDA',
         color='KITCHEN EBITDA',
         color_continuous_scale='Greens'
     )
@@ -232,7 +278,7 @@ def create_bottom_kitchens_cm(df):
         bottom_kitchens,
         x='STORE',
         y='CM_PERCENT',
-        title='📉 Bottom 3 Kitchens by CM %',
+        title='Bottom 3 Kitchens by CM %',
         color='CM_PERCENT',
         color_continuous_scale='Reds'
     )
@@ -300,7 +346,7 @@ def create_revenue_ebitda_trend(df):
     fig.update_yaxes(title_text="Kitchen EBITDA (₹)", secondary_y=True)
     
     fig.update_layout(
-        title="📈 Revenue vs EBITDA Trend Over Time",
+        title="Revenue vs EBITDA Trend Over Time",
         height=400,
         hovermode='x unified'
     )
@@ -326,7 +372,7 @@ def create_city_performance_heatmap(df):
     fig = px.imshow(
         heatmap_matrix,
         labels=dict(x="Month", y="City", color="EBITDA %"),
-        title="🗺️ City Performance Heat Map - EBITDA % by Month",
+        title="City Performance Heat Map - EBITDA % by Month",
         color_continuous_scale="RdYlGn",
         aspect="auto"
     )
@@ -428,7 +474,7 @@ def create_india_map_visualization(df):
         },
         color_continuous_scale="RdYlGn",
         size_max=50,
-        title="🇮🇳 India Map - City Performance Overview"
+        title="India Map - City Performance Overview"
     )
     
     # Focus on India
@@ -493,7 +539,7 @@ def main():
     df = load_data()
     
     # Header
-    st.markdown('<div class="main-header">🏪 Kitchen-Level Profit & Loss Dashboard</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">Kitchen-Level Profit & Loss Dashboard</div>', unsafe_allow_html=True)
     
     # Create filters
     filters = create_filters(df)
@@ -506,63 +552,97 @@ def main():
         st.warning("⚠️ No data matches the selected filters. Please adjust your filter criteria.")
         return
     
-    # Display key metrics
+    # Display key metrics with enhanced styling
+    st.markdown("### Key Performance Indicators")
+    
     col1, col2, col3, col4, col5, col6 = st.columns(6)
     
     with col1:
         total_revenue = filtered_df['NET REVENUE'].sum()
-        st.metric("💰 Total Revenue", f"₹{total_revenue:,.0f}")
+        st.markdown(f"""
+        <div class="metric-card" style="text-align: center; background: #2c3e50; color: white; border: none; padding: 0.8rem;">
+            <div style="font-size: 1.4rem; font-weight: bold;">₹{total_revenue:,.0f}</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">Total Revenue</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col2:
         total_ebitda = filtered_df['KITCHEN EBITDA'].sum()
-        st.metric("📊 Total EBITDA", f"₹{total_ebitda:,.0f}")
+        st.markdown(f"""
+        <div class="metric-card" style="text-align: center; background: #34495e; color: white; border: none; padding: 0.8rem;">
+            <div style="font-size: 1.4rem; font-weight: bold;">₹{total_ebitda:,.0f}</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">Total EBITDA</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col3:
         avg_ebitda_percent = filtered_df['EBITDA_PERCENT'].mean()
-        st.metric("📈 Avg EBITDA %", f"{avg_ebitda_percent:.1f}%")
+        st.markdown(f"""
+        <div class="metric-card" style="text-align: center; background: #16a085; color: white; border: none; padding: 0.8rem;">
+            <div style="font-size: 1.4rem; font-weight: bold;">{avg_ebitda_percent:.1f}%</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">Avg EBITDA %</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col4:
         unique_active_stores = filtered_df['STORE'].nunique()
-        st.metric("🏪 Unique Active Stores", unique_active_stores)
+        st.markdown(f"""
+        <div class="metric-card" style="text-align: center; background: #27ae60; color: white; border: none; padding: 0.8rem;">
+            <div style="font-size: 1.4rem; font-weight: bold;">{unique_active_stores}</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">Active Stores</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col5:
         total_active_records = len(filtered_df[filtered_df['STATUS'] == 'Active'])
-        st.metric("📊 Total Active Records", total_active_records)
+        st.markdown(f"""
+        <div class="metric-card" style="text-align: center; background: #8e44ad; color: white; border: none; padding: 0.8rem;">
+            <div style="font-size: 1.4rem; font-weight: bold;">{total_active_records}</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">Active Records</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col6:
-        # Calculate total active store-months (each store per month counts as 1)
         total_store_months = len(filtered_df)
-        st.metric("📈 Total Store-Months", total_store_months)
+        st.markdown(f"""
+        <div class="metric-card" style="text-align: center; background: #7f8c8d; color: white; border: none; padding: 0.8rem;">
+            <div style="font-size: 1.4rem; font-weight: bold;">{total_store_months}</div>
+            <div style="font-size: 0.8rem; opacity: 0.9;">Store-Months</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     st.markdown("---")
     
     # Add explanatory section for store metrics
-    with st.expander("📖 Understanding Store Metrics & Data Info"):
+    with st.expander("📖 Store Metrics Info"):
         # Get original dataset stats
         original_total_stores = df['STORE'].nunique()
         original_active_stores = df[df['STATUS'] == 'Active']['STORE'].nunique()
         original_inactive_stores = df[df['STATUS'] == 'Inactive']['STORE'].nunique()
         
-        st.markdown(f"""
-        **Current Dataset Overview:**
-        - **Total Stores in Dataset**: {original_total_stores} distinct stores
-        - **Active Stores in Dataset**: {original_active_stores} distinct stores  
-        - **Inactive Stores in Dataset**: {original_inactive_stores} distinct stores
-        - **Total Records**: {len(df)} rows
+        col1, col2 = st.columns(2)
         
-        **Filtered Results (based on your current filters):**
-        - **Unique Active Stores**: Number of distinct store names in your filtered dataset
-        - **Total Active Records**: Count of records where STATUS = 'Active' 
-        - **Total Store-Months**: Total number of data points (each store per month = 1 record)
+        with col1:
+            st.markdown(f"""
+            **Dataset Overview:**
+            - Total Stores: {original_total_stores}
+            - Active Stores: {original_active_stores}
+            - Inactive Stores: {original_inactive_stores}
+            - Total Records: {len(df)}
+            """)
         
-        *Note: If you expect 300+ stores, this dataset might be a sample or subset of your full data.*
-        """)
+        with col2:
+            st.markdown(f"""
+            **Current Filters:**
+            - Active Stores: Distinct store names
+            - Active Records: STATUS = 'Active'
+            - Store-Months: Each store per month
+            """)
         
-        # Show month breakdown
+        # Show compact month breakdown
         month_breakdown = df.groupby('MONTH')['STORE'].nunique().reset_index()
-        month_breakdown.columns = ['Month', 'Unique Stores']
-        st.markdown("**Stores per Month:**")
-        st.dataframe(month_breakdown, use_container_width=True)
+        month_breakdown.columns = ['Month', 'Stores']
+        st.dataframe(month_breakdown, use_container_width=True, height=150)
     
     # Kitchen Snapshot Table
     st.plotly_chart(create_kitchen_snapshot_table(filtered_df), use_container_width=True)
@@ -580,7 +660,7 @@ def main():
     st.plotly_chart(create_revenue_ebitda_trend(filtered_df), use_container_width=True)
     
     # Heat Map and India Map visualizations
-    st.markdown("## 🗺️ Geographical Performance Analysis")
+    st.markdown("## Geographical Performance Analysis")
     
     # Charts row 2 - Heat maps
     col1, col2 = st.columns(2)
@@ -592,7 +672,7 @@ def main():
         st.plotly_chart(create_india_map_visualization(filtered_df), use_container_width=True)
     
     # Insights section
-    st.markdown("## 💡 Key Insights")
+    st.markdown("## Key Insights")
     insights = create_insights(filtered_df)
     
     for insight in insights:
