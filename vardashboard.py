@@ -125,15 +125,20 @@ def load_data():
 
 def create_navigation():
     """Create navigation links between dashboards."""
-    st.sidebar.markdown("### 🔗 Navigation")
+    st.sidebar.markdown("### Navigation")
     
     # Create navigation buttons
-    st.sidebar.markdown("📈 **Variance Dashboard** *(Active)*")
+    st.sidebar.markdown("**Variance Dashboard** *(Active)*")
     
     # Configuration for deployment URLs
     # You can set these as environment variables or Streamlit secrets when deployed
-    KITCHEN_DASHBOARD_URL = st.secrets.get("KITCHEN_DASHBOARD_URL", "http://localhost:8501")
-    VARIANCE_DASHBOARD_URL = st.secrets.get("VARIANCE_DASHBOARD_URL", "http://localhost:8502")
+    try:
+        KITCHEN_DASHBOARD_URL = st.secrets.get("KITCHEN_DASHBOARD_URL", "https://sugo29-dashboard-kitchen-dashboard-5obkn5.streamlit.app/")
+        VARIANCE_DASHBOARD_URL = st.secrets.get("VARIANCE_DASHBOARD_URL", "http://localhost:8502")
+    except:
+        # Fallback if secrets are not available
+        KITCHEN_DASHBOARD_URL = "https://sugo29-dashboard-kitchen-dashboard-5obkn5.streamlit.app/"
+        VARIANCE_DASHBOARD_URL = "http://localhost:8502"
     
     # Create navigation link
     kitchen_url = KITCHEN_DASHBOARD_URL
@@ -141,26 +146,15 @@ def create_navigation():
         f'<a href="{kitchen_url}" target="_blank" style="text-decoration: none;">'
         f'<button style="width: 100%; padding: 0.5rem; background-color: #ff6b6b; color: white; '
         f'border: none; border-radius: 0.5rem; cursor: pointer; font-weight: bold;">'
-        f'🍳 Switch to Kitchen Dashboard</button></a>',
+        f'Switch to Kitchen Dashboard</button></a>',
         unsafe_allow_html=True
     )
     
     st.sidebar.markdown("---")
-    
-    # Quick access info
-    with st.sidebar.expander("ℹ️ Dashboard Info"):
-        st.write("**Current:** Variance Analysis Dashboard")
-        if "localhost" in VARIANCE_DASHBOARD_URL:
-            st.write("**Environment:** Local Development")
-            st.write("**Port:** 8502")
-        else:
-            st.write("**Environment:** Production/Deployed")
-        st.write(f"**Kitchen Dashboard:** {kitchen_url}")
-        st.write(f"**Variance Dashboard:** {VARIANCE_DASHBOARD_URL}")
 
 def create_filters(df):
     """Create compact sidebar filters."""
-    st.sidebar.markdown("### 📊 Variance Filters")
+    st.sidebar.markdown("### Variance Filters")
     
     # Variance filter options
     variance_options = [
@@ -171,7 +165,7 @@ def create_filters(df):
         "Custom Range"
     ]
     
-    selected_variance = st.sidebar.selectbox("📈 Variance Filter", variance_options, key="variance_filter")
+    selected_variance = st.sidebar.selectbox("Variance Filter", variance_options, key="variance_filter")
     
     # Custom variance range if selected
     variance_range = None
@@ -189,13 +183,13 @@ def create_filters(df):
     
     # Store filter
     stores = ['All'] + sorted(df['STORE'].unique().tolist())
-    selected_store = st.sidebar.selectbox("🏪 Store", stores, key="store")
+    selected_store = st.sidebar.selectbox("Store", stores, key="store")
     
     # City filter
     cities = ['All'] + sorted(df['CITY'].unique().tolist())
-    selected_city = st.sidebar.selectbox("🏙️ City", cities, key="city")
+    selected_city = st.sidebar.selectbox("City", cities, key="city")
     
-    st.sidebar.markdown("### 🔧 Matrix Configuration")
+    st.sidebar.markdown("### Matrix Configuration")
     
     # Row selector for matrix
     row_options = [
@@ -203,7 +197,7 @@ def create_filters(df):
         "CM COHORT",
         "EBITDA CATEGORY"
     ]
-    selected_row = st.sidebar.selectbox("📊 Matrix Rows", row_options, key="matrix_row")
+    selected_row = st.sidebar.selectbox("Matrix Rows", row_options, key="matrix_row")
     
     # Toggle for count vs percentage
     show_percentage = st.sidebar.toggle("Count %", value=False, help="Toggle between Count and Count %")
@@ -272,7 +266,7 @@ def create_variance_summary_metrics(df):
 def create_cohort_month_matrix(df, matrix_row, show_percentage=False):
     """Create a matrix showing store counts by selected row attribute and month."""
     display_type = "Count %" if show_percentage else "Count"
-    st.markdown(f"### 📊 Store {display_type} Matrix: {matrix_row} vs Month")
+    st.markdown(f"### Store {display_type} Matrix: {matrix_row} vs Month")
     
     # Create pivot table
     pivot_table = df.groupby([matrix_row, 'MONTH']).size().reset_index(name='Store Count')
@@ -329,7 +323,7 @@ def create_cohort_month_matrix(df, matrix_row, show_percentage=False):
     st.plotly_chart(fig, use_container_width=True)
     
     # Display the matrix as a table
-    st.markdown(f"#### 📋 Store {display_type} Table")
+    st.markdown(f"#### Store {display_type} Table")
     
     # Format the pivot table for display
     if show_percentage:
@@ -365,7 +359,7 @@ def create_cohort_month_matrix(df, matrix_row, show_percentage=False):
 
 def create_revenue_variance_analysis(df, matrix_row):
     """Create variance analysis by selected row attribute."""
-    st.markdown(f"### 💰 {matrix_row} vs Variance Analysis")
+    st.markdown(f"### {matrix_row} vs Variance Analysis")
     
     # Only create box plot if the selected attribute makes sense for variance analysis
     if matrix_row in ['REVENUE COHORT', 'CM COHORT', 'EBITDA CATEGORY', 'ZONE MAPPING']:
@@ -382,7 +376,7 @@ def create_revenue_variance_analysis(df, matrix_row):
         st.plotly_chart(fig, use_container_width=True)
     
     # Summary statistics by selected attribute
-    st.markdown(f"#### 📊 Variance Statistics by {matrix_row}")
+    st.markdown(f"#### Variance Statistics by {matrix_row}")
     cohort_stats = df.groupby(matrix_row)['VARIANCE_PCT'].agg([
         'count', 'mean', 'median', 'min', 'max', 'std'
     ]).round(2)
@@ -392,13 +386,13 @@ def create_revenue_variance_analysis(df, matrix_row):
 def main():
     """Main dashboard function."""
     # Header
-    st.markdown('<h1 class="main-header">🎯 Variance Analysis Dashboard</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Variance Analysis Dashboard</h1>', unsafe_allow_html=True)
     
     # Load data
     try:
         df = load_data()
     except Exception as e:
-        st.error(f"❌ Error loading data: {str(e)}")
+        st.error(f"Error loading data: {str(e)}")
         return
     
     # Create navigation
@@ -412,7 +406,7 @@ def main():
     
     # Show filtered data info
     if len(filtered_df) == 0:
-        st.warning("⚠️ No data matches the selected filters.")
+        st.warning("No data matches the selected filters.")
         return
     
     # Summary metrics
@@ -429,7 +423,7 @@ def main():
     create_revenue_variance_analysis(filtered_df, filters['matrix_row'])
     
     # Raw data view
-    with st.expander("🔍 View Raw Data"):
+    with st.expander("View Raw Data"):
         st.dataframe(filtered_df, use_container_width=True)
 
 if __name__ == "__main__":

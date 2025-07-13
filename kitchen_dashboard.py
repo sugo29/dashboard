@@ -130,17 +130,6 @@ def create_navigation():
     )
     
     st.sidebar.markdown("---")
-    
-    # Quick access info
-    with st.sidebar.expander("ℹ️ Dashboard Info"):
-        st.write("**Current:** Kitchen P&L Dashboard")
-        if "localhost" in KITCHEN_DASHBOARD_URL:
-            st.write("**Environment:** Local Development")
-            st.write("**Port:** 8501")
-        else:
-            st.write("**Environment:** Production/Deployed")
-        st.write(f"**Kitchen Dashboard:** {KITCHEN_DASHBOARD_URL}")
-        st.write(f"**Variance Dashboard:** {variance_url}")
 
 def create_filters(df):
     """Create compact sidebar filters."""
