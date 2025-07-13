@@ -117,29 +117,11 @@ def create_navigation():
     # Direct URL to the deployed Variance Dashboard
     VARIANCE_DASHBOARD_URL = "https://sugo29-dashboard-vardashboard-tlwjmv.streamlit.app/"
     
-    # Create navigation link with orange background
-    st.sidebar.markdown(
-        f'''
-        <a href="{VARIANCE_DASHBOARD_URL}" target="_self" style="text-decoration: none;">
-            <div style="
-                width: 100%; 
-                padding: 0.75rem; 
-                background-color: #ff8c00; 
-                color: white; 
-                border: none; 
-                border-radius: 0.5rem; 
-                cursor: pointer; 
-                font-weight: bold;
-                text-align: center;
-                margin: 0.5rem 0;
-                transition: background-color 0.3s ease;
-            " onmouseover="this.style.backgroundColor='#ff7700'" 
-               onmouseout="this.style.backgroundColor='#ff8c00'">
-                📈 Switch to Variance Dashboard
-            </div>
-        </a>
-        ''',
-        unsafe_allow_html=True
+    # Create navigation link using Streamlit's link_button for better reliability
+    st.sidebar.link_button(
+        "📈 Switch to Variance Dashboard",
+        VARIANCE_DASHBOARD_URL,
+        use_container_width=True
     )
     
     st.sidebar.markdown("---")
