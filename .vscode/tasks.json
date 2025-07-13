@@ -12,6 +12,20 @@
 			"group": "build",
 			"isBackground": true,
 			"problemMatcher": []
+		},
+		{
+			"label": "Run Variance Dashboard",
+			"type": "shell",
+			"command": "c:/Users/suhan/OneDrive/Documents/GitHub/DashBoard/.venv/Scripts/streamlit.exe",
+			"args": [
+				"run",
+				"vardashboard.py",
+				"--server.port",
+				"8502"
+			],
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": []
 		}
 	]
 }

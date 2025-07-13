@@ -107,6 +107,41 @@ def load_data():
     
     return df
 
+def create_navigation():
+    """Create navigation links between dashboards."""
+    st.sidebar.markdown("### 🔗 Navigation")
+    
+    # Create navigation buttons
+    st.sidebar.markdown("🍳 **Kitchen Dashboard** *(Active)*")
+    
+    # Configuration for deployment URLs
+    # You can set these as environment variables or Streamlit secrets when deployed
+    KITCHEN_DASHBOARD_URL = st.secrets.get("KITCHEN_DASHBOARD_URL", "http://localhost:8501")
+    VARIANCE_DASHBOARD_URL = st.secrets.get("VARIANCE_DASHBOARD_URL", "http://localhost:8502")
+    
+    # Create navigation link
+    variance_url = VARIANCE_DASHBOARD_URL
+    st.sidebar.markdown(
+        f'<a href="{variance_url}" target="_blank" style="text-decoration: none;">'
+        f'<button style="width: 100%; padding: 0.5rem; background-color: #e74c3c; color: white; '
+        f'border: none; border-radius: 0.5rem; cursor: pointer; font-weight: bold;">'
+        f'📈 Switch to Variance Dashboard</button></a>',
+        unsafe_allow_html=True
+    )
+    
+    st.sidebar.markdown("---")
+    
+    # Quick access info
+    with st.sidebar.expander("ℹ️ Dashboard Info"):
+        st.write("**Current:** Kitchen P&L Dashboard")
+        if "localhost" in KITCHEN_DASHBOARD_URL:
+            st.write("**Environment:** Local Development")
+            st.write("**Port:** 8501")
+        else:
+            st.write("**Environment:** Production/Deployed")
+        st.write(f"**Kitchen Dashboard:** {KITCHEN_DASHBOARD_URL}")
+        st.write(f"**Variance Dashboard:** {variance_url}")
+
 def create_filters(df):
     """Create compact sidebar filters."""
     st.sidebar.markdown("### 📊 Filters")
@@ -540,6 +575,9 @@ def main():
     
     # Header
     st.markdown('<div class="main-header">Kitchen-Level Profit & Loss Dashboard</div>', unsafe_allow_html=True)
+    
+    # Create navigation
+    create_navigation()
     
     # Create filters
     filters = create_filters(df)
