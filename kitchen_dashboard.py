@@ -117,7 +117,7 @@ def create_navigation():
     # Configuration for deployment URLs
     # You can set these as environment variables or Streamlit secrets when deployed
     KITCHEN_DASHBOARD_URL = st.secrets.get("KITCHEN_DASHBOARD_URL", "http://localhost:8501")
-    VARIANCE_DASHBOARD_URL = st.secrets.get("VARIANCE_DASHBOARD_URL", "http://localhost:8502")
+    VARIANCE_DASHBOARD_URL = st.secrets.get("VARIANCE_DASHBOARD_URL", "https://sugo29-dashboard-vardashboard-tlwjmv.streamlit.app/")
     
     # Create navigation link
     variance_url = VARIANCE_DASHBOARD_URL
