@@ -114,15 +114,12 @@ def create_navigation():
     # Create navigation buttons
     st.sidebar.markdown("🍳 **Kitchen Dashboard** *(Active)*")
     
-    # Configuration for deployment URLs
-    # You can set these as environment variables or Streamlit secrets when deployed
-    KITCHEN_DASHBOARD_URL = st.secrets.get("KITCHEN_DASHBOARD_URL", "http://localhost:8501")
-    VARIANCE_DASHBOARD_URL = st.secrets.get("VARIANCE_DASHBOARD_URL", "https://sugo29-dashboard-vardashboard-tlwjmv.streamlit.app/")
+    # Direct URL to the deployed Variance Dashboard
+    VARIANCE_DASHBOARD_URL = "https://sugo29-dashboard-vardashboard-tlwjmv.streamlit.app/"
     
-    # Create navigation link
-    variance_url = VARIANCE_DASHBOARD_URL
+    # Create navigation link that opens in the same tab
     st.sidebar.markdown(
-        f'<a href="{variance_url}" target="_blank" style="text-decoration: none;">'
+        f'<a href="{VARIANCE_DASHBOARD_URL}" target="_self" style="text-decoration: none;">'
         f'<button style="width: 100%; padding: 0.5rem; background-color: #e74c3c; color: white; '
         f'border: none; border-radius: 0.5rem; cursor: pointer; font-weight: bold;">'
         f'📈 Switch to Variance Dashboard</button></a>',
